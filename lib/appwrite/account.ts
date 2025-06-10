@@ -159,3 +159,21 @@ export const updateUserProfile = async (changedUserProfile: UserProfileDto) => {
     throw error;
   }
 };
+
+export const changePassword = async (
+  oldPassword: string,
+  newPassword: string
+) => {
+  try {
+    const user = await getCurrentUser();
+    if (!user) {
+      throw new Error("User not authenticated");
+    }
+
+    const response = await account.updatePassword(newPassword, oldPassword);
+    return response;
+  } catch (error) {
+    console.error("Error changing password:", error);
+    throw error;
+  }
+};

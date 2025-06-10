@@ -1,7 +1,6 @@
 "use client";
 
 import type React from "react";
-
 import { useState, useCallback, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,17 +16,23 @@ import Cropper from "react-easy-crop";
 interface ProfilePictureUploadProps {
   onSave: (croppedImage: string) => void;
   buttonText?: string;
+  cropShape?: "rect" | "round";
+  aspect?: number;
+  identifier?: string;
 }
 
 export default function ProfilePictureUpload({
   onSave,
-  buttonText = "Change Avatar",
+  buttonText = "Change Image",
+  cropShape = "round",
+  aspect = 1,
+  identifier = "profile-picture-upload",
 }: ProfilePictureUploadProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [image, setImage] = useState<string | null>(null);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
-  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -81,9 +86,9 @@ export default function ProfilePictureUpload({
         type="file"
         ref={fileInputRef}
         onChange={handleFileChange}
-        accept="image/png, image/jpeg, image/jpg, image/gif"
+        accept="image/png, image/jpeg, image/jpg"
         className="hidden"
-        id="profile-picture-upload"
+        id={identifier}
       />
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -97,11 +102,11 @@ export default function ProfilePictureUpload({
                 image={image}
                 crop={crop}
                 zoom={zoom}
-                aspect={1}
+                aspect={aspect}
                 onCropChange={setCrop}
                 onCropComplete={onCropComplete}
                 onZoomChange={setZoom}
-                cropShape="round"
+                cropShape={cropShape}
                 showGrid={false}
               />
             )}

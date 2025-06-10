@@ -25,7 +25,7 @@ import { toast } from "sonner";
 
 const Profile = ({ profile }: { profile: UserProfile | null }) => {
   const { socialLinks, loading, updateSocialLinks } = useSocialLinks();
-  const { uploadProfilePicture } = useProfilePictures();
+  const { uploadProfilePicture, uploadProfileCover } = useProfilePictures();
   const { updateProfile } = useAccount();
   const [fullNames, setFullNames] = useState<{
     firstName: string;
@@ -50,6 +50,7 @@ const Profile = ({ profile }: { profile: UserProfile | null }) => {
     []
   );
   const [profilePicture, setProfilePicture] = useState<string | null>(null);
+  const [coverImage, setCoverImage] = useState<string | null>(null);
   const [canUpdateProfile, setCanUpdateProfile] = useState(true);
 
   useEffect(() => {
@@ -76,10 +77,19 @@ const Profile = ({ profile }: { profile: UserProfile | null }) => {
     setProfilePicture(image);
   };
 
+  const handleProfileCoverChange = (image: string | null) => {
+    setCoverImage(image);
+  };
+
   const handleProfileUpdate = async () => {
     if (profilePicture) {
-      uploadProfilePicture();
+      uploadProfilePicture({ fileString: profilePicture });
     }
+
+    if (coverImage) {
+      uploadProfileCover({ fileString: coverImage });
+    }
+
     const fullName = `${fullNames.firstName} ${fullNames.lastName}`.trim();
 
     const updateStatus = await updateProfile({
@@ -111,24 +121,55 @@ const Profile = ({ profile }: { profile: UserProfile | null }) => {
         </CardHeader>
         <CardContent className="space-y-6">
           {/* Avatar */}
-          <div className="flex items-center space-x-6">
-            <Avatar className="h-24 w-24">
-              <AvatarImage
-                src={profilePicture || profile?.avatar_url}
-                alt="User"
+          <div className="flex flex-row items-center justify-start space-x-4">
+            <div className="flex flex-col items-center justify-start space-y-2">
+              <Avatar className="h-40 w-40">
+                <AvatarImage
+                  src={profilePicture || profile?.avatar_url}
+                  alt="User"
+                />
+                <AvatarFallback>
+                  {profile?.full_name
+                    ? (profile.full_name.split(" ")[0]?.[0] || "") +
+                      (profile.full_name.split(" ")[1]?.[0] || "")
+                    : "User"}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex flex-col items-center space-x-0 space-y-0">
+                <ProfilePictureUpload
+                  onSave={handleProfilePictureChange}
+                  buttonText="Change Avatar"
+                />
+                <p className="text-sm text-muted-foreground">
+                  JPG, JPEG or PNG
+                </p>
+              </div>
+            </div>
+            <div className="h-full flex flex-col space-y-2">
+              <img
+                src={
+                  coverImage
+                    ? coverImage
+                    : profile?.cover_image_url &&
+                      profile.cover_image_url.startsWith("http")
+                    ? profile.cover_image_url
+                    : "/placeholder.svg"
+                }
+                alt="Cover"
+                className="h-40 object-cover aspect-[3/1]"
               />
-              <AvatarFallback>
-                {profile?.full_name
-                  ? (profile.full_name.split(" ")[0]?.[0] || "") +
-                    (profile.full_name.split(" ")[1]?.[0] || "")
-                  : "User"}
-              </AvatarFallback>
-            </Avatar>
-            <div className="space-y-2">
-              <ProfilePictureUpload onSave={handleProfilePictureChange} />
-              <p className="text-sm text-muted-foreground">
-                JPG, PNG or GIF. Max size 2MB.
-              </p>
+              <div className="flex flex-col items-center space-x-0 space-y-0">
+                <ProfilePictureUpload
+                  onSave={handleProfileCoverChange}
+                  buttonText="Change Cover"
+                  cropShape="rect"
+                  aspect={3 / 1}
+                  identifier="profile-cover-upload"
+                />
+                <p className="text-sm text-muted-foreground">
+                  JPG, JPEG or PNG
+                </p>
+              </div>
             </div>
           </div>
 

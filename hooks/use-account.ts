@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
+  changePassword,
   createNewUser_Email,
   getCurrentUser,
   getCurrentUserProfile,
@@ -77,6 +78,22 @@ export function useAccount() {
     },
   });
 
+  const updatePasswordMutation = useMutation({
+    mutationFn: async ({
+      oldPassword,
+      newPassword,
+    }: {
+      oldPassword: string;
+      newPassword: string;
+    }) => {
+      await changePassword(oldPassword, newPassword);
+      return fetchUser();
+    },
+    onSuccess: (data) => {
+      queryClient.setQueryData(["account"], data);
+    },
+  });
+
   return {
     user: data?.user as Models.User<Models.Preferences> | null,
     profile: data?.profile as UserProfile | null,
@@ -113,6 +130,14 @@ export function useAccount() {
     updateProfile: async (data: UserProfileDto) => {
       try {
         await updateProfileMutation.mutateAsync({ ...data });
+        return true;
+      } catch {
+        return false;
+      }
+    },
+    updatePassword: async (oldPassword: string, newPassword: string) => {
+      try {
+        await updatePasswordMutation.mutateAsync({ oldPassword, newPassword });
         return true;
       } catch {
         return false;

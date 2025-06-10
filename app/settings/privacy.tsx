@@ -27,7 +27,7 @@ import { Save } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-const PrivacySettings = () => {
+const Privacy = () => {
   const { privacySettings, loading, updatePrivacy } = usePrivacy();
   const [editedPrivacy, setEditedPrivacy] = useState<UserPrivacySettingsDto>({
     profile_visibility: UserProfileVisibility.PUBLIC,
@@ -198,4 +198,4 @@ const PrivacySettings = () => {
   );
 };
 
-export default PrivacySettings;
+export default Privacy;
