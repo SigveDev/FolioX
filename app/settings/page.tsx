@@ -12,6 +12,7 @@ import Profile from "./profile";
 import Notifications from "./notifications";
 import Privacy from "./privacy";
 import Account from "./account";
+import Resume from "./resume";
 
 export default function SettingsPage() {
   const router = useRouter();
@@ -95,6 +96,9 @@ export default function SettingsPage() {
 
             {/* Account Tab */}
             <Account />
+
+            {/* Resume Tab */}
+            <Resume profile={profile} />
           </Tabs>
         </div>
       </div>

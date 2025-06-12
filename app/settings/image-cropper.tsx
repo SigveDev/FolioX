@@ -12,10 +12,12 @@ import {
 } from "@/components/ui/dialog";
 import { Camera, Loader2 } from "lucide-react";
 import Cropper from "react-easy-crop";
+import { cn } from "@/lib/utils";
 
 interface ProfilePictureUploadProps {
   onSave: (croppedImage: string) => void;
-  buttonText?: string;
+  children: React.ReactNode;
+  className?: string;
   cropShape?: "rect" | "round";
   aspect?: number;
   identifier?: string;
@@ -23,7 +25,8 @@ interface ProfilePictureUploadProps {
 
 export default function ProfilePictureUpload({
   onSave,
-  buttonText = "Change Image",
+  children,
+  className = "",
   cropShape = "round",
   aspect = 1,
   identifier = "profile-picture-upload",
@@ -78,10 +81,12 @@ export default function ProfilePictureUpload({
 
   return (
     <>
-      <Button onClick={triggerFileInput} variant="outline">
-        <Camera className="h-4 w-4" />
-        {buttonText}
-      </Button>
+      <button
+        onClick={triggerFileInput}
+        className={cn("border-0 bg-transparent h-fit w-fit p-0 m-0", className)}
+      >
+        {children}
+      </button>
       <input
         type="file"
         ref={fileInputRef}

@@ -30,8 +30,11 @@ export default function DashboardHeader() {
         <div className="flex items-center space-x-4">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                <Avatar className="h-8 w-8">
+              <Button
+                variant="ghost"
+                className="relative h-10 w-10 rounded-full"
+              >
+                <Avatar className="h-10 w-10">
                   <AvatarImage src={profile?.avatar_url} alt="User" />
                   <AvatarFallback>
                     {profile?.full_name

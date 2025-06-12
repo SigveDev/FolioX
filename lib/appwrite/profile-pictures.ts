@@ -5,6 +5,32 @@ export const uploadNewProfilePicture = async (fileString: string) => {
   try {
     const user = await getCurrentUser();
     if (user) {
+      const userProfileDocuments = await database.listDocuments(
+        process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID || "",
+        process.env.NEXT_PUBLIC_APPWRITE_DATABASE_USER_PROFILES_COLLECTION_ID ||
+          "",
+        [Query.equal("user_id", user.$id)]
+      );
+
+      if (userProfileDocuments.documents.length === 0) {
+        throw new Error("User profile not found");
+      }
+
+      const userProfileDocument = userProfileDocuments.documents[0];
+
+      if (userProfileDocument.avatar_url) {
+        const urlParts = userProfileDocument.avatar_url.split("/");
+        const fileId =
+          urlParts.length >= 2 ? urlParts[urlParts.length - 2] : "";
+        const deleteResult = await storage.deleteFile(
+          process.env.NEXT_PUBLIC_APPWRITE_BUCKET_PROFILE_PICTURES_ID || "",
+          fileId
+        );
+        if (!deleteResult) {
+          throw new Error("Failed to delete existing profile picture");
+        }
+      }
+
       const matches = fileString.match(/^data:(.+);base64,(.+)$/);
       if (!matches) {
         throw new Error("Invalid image data format.");
@@ -40,20 +66,8 @@ export const uploadNewProfilePicture = async (fileString: string) => {
         ]
       );
       if (upload) {
-        const userProfileDocuments = await database.listDocuments(
-          process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID || "",
-          process.env
-            .NEXT_PUBLIC_APPWRITE_DATABASE_USER_PROFILES_COLLECTION_ID || "",
-          [Query.equal("user_id", user.$id)]
-        );
-
-        if (userProfileDocuments.documents.length === 0) {
-          throw new Error("User profile not found");
-        }
-
         const avatarUrl = `${process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ENDPOINT}/storage/buckets/${process.env.NEXT_PUBLIC_APPWRITE_BUCKET_PROFILE_PICTURES_ID}/files/${upload.$id}/view?project=${process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID}`;
 
-        const userProfileDocument = userProfileDocuments.documents[0];
         const updatedProfile = await database.updateDocument(
           process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID || "",
           process.env

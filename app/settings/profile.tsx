@@ -16,7 +16,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { useSocialLinks } from "@/hooks/use-sociallinks";
 import { UserProfile, UserProfileDto } from "@/types/user-profiles";
 import { UserSocialLinkDto } from "@/types/user-social-links";
-import { Save } from "lucide-react";
+import {
+  Camera,
+  ExternalLink,
+  Github,
+  Linkedin,
+  Save,
+  Twitter,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import ProfilePictureUpload from "./image-cropper";
 import { useProfilePictures } from "@/hooks/use-profile-pictures";
@@ -121,57 +128,144 @@ const Profile = ({ profile }: { profile: UserProfile | null }) => {
         </CardHeader>
         <CardContent className="space-y-6">
           {/* Avatar */}
-          <div className="flex flex-row items-center justify-start space-x-4">
-            <div className="flex flex-col items-center justify-start space-y-2">
-              <Avatar className="h-40 w-40">
-                <AvatarImage
-                  src={profilePicture || profile?.avatar_url}
-                  alt="User"
+          <section className="relative">
+            {/* Cover Image */}
+            <div className="h-fit">
+              <ProfilePictureUpload
+                onSave={handleProfileCoverChange}
+                cropShape="rect"
+                aspect={3 / 1}
+                identifier="profile-cover-upload"
+                className="w-full group"
+              >
+                <img
+                  src={
+                    coverImage
+                      ? coverImage
+                      : profile?.cover_image_url &&
+                        profile.cover_image_url.startsWith("http")
+                      ? profile.cover_image_url
+                      : "/placeholder.svg"
+                  }
+                  alt="Cover"
+                  className="w-full object-cover rounded-lg"
                 />
-                <AvatarFallback>
-                  {profile?.full_name
-                    ? (profile.full_name.split(" ")[0]?.[0] || "") +
-                      (profile.full_name.split(" ")[1]?.[0] || "")
-                    : "User"}
-                </AvatarFallback>
-              </Avatar>
-              <div className="flex flex-col items-center space-x-0 space-y-0">
+                <div className="absolute top-0 left-0 hidden group-hover:flex items-center justify-center w-full aspect-[3/1] bg-black/25 text-white cursor-pointer rounded-lg">
+                  <Camera className="h-12 w-12" />
+                </div>
+              </ProfilePictureUpload>
+            </div>
+
+            {/* Profile Info */}
+            <div className="container relative">
+              <div className="flex flex-col md:flex-row items-start md:items-end gap-6 -mt-16 md:-mt-20">
                 <ProfilePictureUpload
                   onSave={handleProfilePictureChange}
-                  buttonText="Change Avatar"
-                />
-                <p className="text-sm text-muted-foreground">
-                  JPG, JPEG or PNG
-                </p>
+                  className="relative group"
+                >
+                  <Avatar className="h-32 w-32 border-4 border-background shadow-lg">
+                    <AvatarImage
+                      src={profilePicture || profile?.avatar_url}
+                      alt="User"
+                    />
+                    <AvatarFallback>
+                      {profile?.full_name
+                        ? (profile.full_name.split(" ")[0]?.[0] || "") +
+                          (profile.full_name.split(" ")[1]?.[0] || "")
+                        : "User"}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="absolute bottom-0 left-0 hidden group-hover:flex items-center justify-center w-[calc(100%-0.5rem)] h-[calc(100%-0.5rem)] bg-black/25 text-white rounded-full cursor-pointer m-1">
+                    <Camera className="h-10 w-10" />
+                  </div>
+                </ProfilePictureUpload>
+
+                <div className="flex-1 bg-background/95 backdrop-blur rounded-lg p-6 shadow-lg">
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                      <h1 className="text-3xl font-bold">
+                        {profile?.full_name}
+                      </h1>
+                      <p className="text-xl text-muted-foreground">
+                        {profile?.professional_title}
+                      </p>
+                      <p className="text-muted-foreground mt-2">
+                        {profile?.location}
+                      </p>
+                    </div>
+
+                    <div className="flex items-center space-x-2">
+                      {socialLinksState.find(
+                        (link) => link.platform === "linkedin"
+                      )?.url && (
+                        <Button variant="outline" size="sm" asChild>
+                          <a
+                            href={`https://${
+                              socialLinksState.find(
+                                (link) => link.platform === "linkedin"
+                              )?.url
+                            }`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <Linkedin className="h-4 w-4" />
+                          </a>
+                        </Button>
+                      )}
+                      {socialLinksState.find(
+                        (link) => link.platform === "twitter"
+                      )?.url && (
+                        <Button variant="outline" size="sm" asChild>
+                          <a
+                            href={`https://${
+                              socialLinksState.find(
+                                (link) => link.platform === "twitter"
+                              )?.url
+                            }`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <Twitter className="h-4 w-4" />
+                          </a>
+                        </Button>
+                      )}
+                      {socialLinksState.find(
+                        (link) => link.platform === "github"
+                      )?.url && (
+                        <Button variant="outline" size="sm" asChild>
+                          <a
+                            href={`https://${
+                              socialLinksState.find(
+                                (link) => link.platform === "github"
+                              )?.url
+                            }`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <Github className="h-4 w-4" />
+                          </a>
+                        </Button>
+                      )}
+                      {profile?.website && (
+                        <Button variant="outline" size="sm" asChild>
+                          <a
+                            href={`https://${profile?.website}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <ExternalLink className="h-4 w-4" />
+                          </a>
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                  <p className="mt-4 text-muted-foreground max-w-2xl">
+                    {profile?.bio}
+                  </p>
+                </div>
               </div>
             </div>
-            <div className="h-full flex flex-col space-y-2">
-              <img
-                src={
-                  coverImage
-                    ? coverImage
-                    : profile?.cover_image_url &&
-                      profile.cover_image_url.startsWith("http")
-                    ? profile.cover_image_url
-                    : "/placeholder.svg"
-                }
-                alt="Cover"
-                className="h-40 object-cover aspect-[3/1]"
-              />
-              <div className="flex flex-col items-center space-x-0 space-y-0">
-                <ProfilePictureUpload
-                  onSave={handleProfileCoverChange}
-                  buttonText="Change Cover"
-                  cropShape="rect"
-                  aspect={3 / 1}
-                  identifier="profile-cover-upload"
-                />
-                <p className="text-sm text-muted-foreground">
-                  JPG, JPEG or PNG
-                </p>
-              </div>
-            </div>
-          </div>
+          </section>
 
           <Separator />
 
