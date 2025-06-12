@@ -4,9 +4,9 @@ import {
   Layout,
   Palette,
   BarChart3,
-  Globe,
   Smartphone,
   Monitor,
+  Phone,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -167,7 +167,7 @@ export default function HomePage() {
               </div>
               <h3 className="font-semibold mb-1">Smart Templates</h3>
               <p className="text-sm text-muted-foreground">
-                Pre-designed layouts optimized for case studies
+                Pre-designed layouts optimized for projects and case studies
               </p>
             </div>
             <div className="text-center">
@@ -190,11 +190,11 @@ export default function HomePage() {
             </div>
             <div className="text-center">
               <div className="h-12 w-12 rounded-lg bg-orange-100 flex items-center justify-center mx-auto mb-3">
-                <Globe className="h-6 w-6 text-orange-600" />
+                <Phone className="h-6 w-6 text-orange-600" />
               </div>
-              <h3 className="font-semibold mb-1">Custom Domain</h3>
+              <h3 className="font-semibold mb-1">Responsive Design</h3>
               <p className="text-sm text-muted-foreground">
-                Use your own domain for professional branding
+                Mobile-friendly layouts that look great on any device
               </p>
             </div>
           </div>
