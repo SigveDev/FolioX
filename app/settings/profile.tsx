@@ -148,7 +148,7 @@ const Profile = ({ profile }: { profile: UserProfile | null }) => {
                       : "/placeholder.svg"
                   }
                   alt="Cover"
-                  className="w-full object-cover rounded-lg"
+                  className="w-full object-cover rounded-lg aspect-[3/1]"
                 />
                 <div className="absolute top-0 left-0 hidden group-hover:flex items-center justify-center w-full aspect-[3/1] bg-black/25 text-white cursor-pointer rounded-lg">
                   <Camera className="h-12 w-12" />
