@@ -1,11 +1,18 @@
+"use client";
+
 import Link from "next/link";
 import { Button } from "../ui/button";
+import { useAccount } from "@/hooks/use-account";
 
 export default function LandingPageHeader({
   activeSection = "home",
 }: {
   activeSection?: "home" | "features" | "pricing" | "examples";
 }) {
+  const { user } = useAccount();
+
+  console.log(user);
+
   return (
     <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 flex justify-center">
       <div className="flex h-16 items-center justify-between w-full px-8">
@@ -47,14 +54,22 @@ export default function LandingPageHeader({
             Examples
           </Link>
         </nav>
-        <div className="flex items-center space-x-4">
-          <Button variant="ghost" size="sm" asChild>
-            <Link href="/login">Sign In</Link>
-          </Button>
-          <Button size="sm" asChild>
-            <Link href="/signup">Get Started</Link>
-          </Button>
-        </div>
+        {!user ? (
+          <div className="flex items-center space-x-4">
+            <Button variant="ghost" size="sm" asChild>
+              <Link href="/login">Sign In</Link>
+            </Button>
+            <Button size="sm" asChild>
+              <Link href="/signup">Get Started</Link>
+            </Button>
+          </div>
+        ) : (
+          <div className="flex items-center space-x-4">
+            <Button size="sm" asChild>
+              <Link href="/dashboard">Dashboard</Link>
+            </Button>
+          </div>
+        )}
       </div>
     </header>
   );

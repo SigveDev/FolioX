@@ -24,7 +24,8 @@ export default function LoginPage() {
     password: "",
     rememberMe: false,
   });
-  const { login, loading, user } = useAccount();
+  const { login, user } = useAccount();
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -39,6 +40,7 @@ export default function LoginPage() {
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
+    setLoading(true);
     e.preventDefault();
     setFormError(null);
     const success = await login(formData.email, formData.password);
@@ -47,6 +49,7 @@ export default function LoginPage() {
     } else {
       setFormError("Invalid email or password");
     }
+    setLoading(false);
   };
 
   return (

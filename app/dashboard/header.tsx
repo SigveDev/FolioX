@@ -20,12 +20,13 @@ import { useRouter } from "next/navigation";
 
 export default function DashboardHeader() {
   const router = useRouter();
-  const { profile, logout } = useAccount();
+  const { profile, logout, hardRefresh } = useAccount();
 
   const handleSignOut = async () => {
     try {
       const response = await logout();
       if (response) {
+        hardRefresh();
         router.push("/");
       } else {
         toast("Error", {

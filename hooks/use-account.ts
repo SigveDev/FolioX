@@ -156,11 +156,19 @@ export function useAccount() {
     logout: async () => {
       try {
         await logoutMutation.mutateAsync();
+        await queryClient.removeQueries({
+          queryKey: ["account"],
+          exact: false,
+        });
         return true;
       } catch {
         return false;
       }
     },
     refetch,
+    hardRefresh: async () => {
+      await queryClient.removeQueries({ queryKey: ["account"], exact: false });
+      await refetch({ throwOnError: true });
+    },
   };
 }

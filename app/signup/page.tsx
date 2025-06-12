@@ -28,7 +28,8 @@ export default function SignupPage() {
     password: "",
     agreeToTerms: false,
   });
-  const { register, loading, user } = useAccount();
+  const { register, user } = useAccount();
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -43,6 +44,7 @@ export default function SignupPage() {
   }
 
   const handleSignup = async (e: React.FormEvent) => {
+    setLoading(true);
     e.preventDefault();
     setFormError(null);
 
@@ -64,6 +66,7 @@ export default function SignupPage() {
     } else {
       setFormError("Failed to create account. Please try again.");
     }
+    setLoading(false);
   };
 
   return (
