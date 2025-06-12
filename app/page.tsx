@@ -104,7 +104,7 @@ export default function HomePage() {
                 </div>
                 <div className="flex items-center space-x-3">
                   <Check className="h-5 w-5 text-green-600" />
-                  <span>FolioX subdomain (yourname.foliox.app)</span>
+                  <span>FolioX URL (foliox.app/portfolio/yourname)</span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <Check className="h-5 w-5 text-green-600" />
