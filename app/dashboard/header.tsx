@@ -15,9 +15,34 @@ import {
   AvatarImage,
 } from "../../components/ui/avatar";
 import { useAccount } from "@/hooks/use-account";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function DashboardHeader() {
-  const { profile } = useAccount();
+  const router = useRouter();
+  const { profile, logout } = useAccount();
+
+  const handleSignOut = async () => {
+    try {
+      const response = await logout();
+      if (response) {
+        router.push("/");
+      } else {
+        toast("Error", {
+          description:
+            "There was an error signing out. Please try again later.",
+          duration: 3000,
+        });
+      }
+    } catch (error) {
+      console.error("Sign out error:", error);
+      toast("Error", {
+        description: "There was an error signing out. Please try again later.",
+        duration: 3000,
+      });
+    }
+  };
+
   return (
     <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="flex h-16 items-center justify-between w-full px-8">
@@ -59,9 +84,12 @@ export default function DashboardHeader() {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href="/signout" className="cursor-pointer">
+                <button
+                  className="w-full text-left cursor-pointer"
+                  onClick={handleSignOut}
+                >
                   Sign out
-                </Link>
+                </button>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

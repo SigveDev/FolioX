@@ -5,6 +5,7 @@ import {
   getCurrentUser,
   getCurrentUserProfile,
   loginWithEmail,
+  logout,
   updateUserProfile,
 } from "@/lib/appwrite/account";
 import type { UserProfile, UserProfileDto } from "@/types/user-profiles";
@@ -94,6 +95,15 @@ export function useAccount() {
     },
   });
 
+  const logoutMutation = useMutation({
+    mutationFn: async () => {
+      await logout();
+    },
+    onSuccess: (data) => {
+      queryClient.setQueryData(["account"], data);
+    },
+  });
+
   return {
     user: data?.user as Models.User<Models.Preferences> | null,
     profile: data?.profile as UserProfile | null,
@@ -138,6 +148,14 @@ export function useAccount() {
     updatePassword: async (oldPassword: string, newPassword: string) => {
       try {
         await updatePasswordMutation.mutateAsync({ oldPassword, newPassword });
+        return true;
+      } catch {
+        return false;
+      }
+    },
+    logout: async () => {
+      try {
+        await logoutMutation.mutateAsync();
         return true;
       } catch {
         return false;
