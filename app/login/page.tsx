@@ -24,7 +24,7 @@ export default function LoginPage() {
     password: "",
     rememberMe: false,
   });
-  const { login, loading, error, user } = useAccount();
+  const { login, loading, user } = useAccount();
   const router = useRouter();
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -156,11 +156,6 @@ export default function LoginPage() {
               {formError && (
                 <div className="text-red-600 text-sm text-center">
                   {formError}
-                </div>
-              )}
-              {error && !formError && (
-                <div className="text-red-600 text-sm text-center">
-                  {error.message}
                 </div>
               )}
             </form>
