@@ -44,7 +44,7 @@ export default function HomePage() {
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
             FolioX helps freelancers, creators, and professionals build
             stunning, story-driven portfolios that showcase their best work with
-            detailed case studies.
+            detailed projects and case studies.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" className="text-lg px-8" asChild>
