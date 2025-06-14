@@ -42,7 +42,7 @@ const data = [
       {
         tag: "div",
         classNames:
-          "w-full h-fit flex flex-col gap-4 justify-center items-center py-8 max-w-[1200px] mx-auto",
+          "w-full h-fit flex flex-col gap-4 justify-center items-center py-8 px-4 max-w-[1200px] mx-auto",
         children: [
           {
             tag: "h2",
@@ -101,7 +101,8 @@ const data = [
     children: [
       {
         tag: "div",
-        classNames: "w-full h-full flex justify-center items-center",
+        classNames:
+          "w-full h-full flex justify-center items-center order-first lg:order-last",
         children: [
           {
             tag: "img",
@@ -113,7 +114,8 @@ const data = [
       },
       {
         tag: "div",
-        classNames: "w-full flex flex-col gap-2 w-full h-fit",
+        classNames:
+          "w-full flex flex-col gap-2 w-full h-fit order-last lg:order-first",
         children: [
           {
             tag: "h2",
