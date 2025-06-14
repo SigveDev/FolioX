@@ -10,9 +10,6 @@ export default function LandingPageHeader({
   activeSection?: "home" | "features" | "pricing" | "examples";
 }) {
   const { user } = useAccount();
-
-  console.log(user);
-
   return (
     <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 flex justify-center">
       <div className="flex h-16 items-center justify-between w-full px-8">

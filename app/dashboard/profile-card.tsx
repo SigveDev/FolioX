@@ -13,7 +13,6 @@ import { useEffect, useState } from "react";
 
 const ProfileCard = () => {
   const { profile } = useAccount();
-  const { billingRecord, loading } = useBilling();
   const [profileCompletion, setProfileCompletion] = useState(0);
 
   useEffect(() => {
@@ -68,9 +67,9 @@ const ProfileCard = () => {
 
         <div className="flex items-center justify-between">
           <span className="text-sm">Plan</span>
-          {!loading && (
-            <Badge variant={billingRecord ? "default" : "secondary"}>
-              {billingRecord ? (
+          {profile && (
+            <Badge variant={profile.pro ? "default" : "secondary"}>
+              {profile.pro ? (
                 <>
                   <Crown className="mr-1 h-3 w-3" />
                   Pro

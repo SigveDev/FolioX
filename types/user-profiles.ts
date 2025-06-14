@@ -13,6 +13,7 @@ export interface UserProfile extends Models.Document {
   cover_image_url?: string;
   email?: string;
   resume_url?: string;
+  pro: boolean;
 }
 
 export interface UserProfileDto {
@@ -27,4 +28,5 @@ export interface UserProfileDto {
   cover_image_url?: string;
   email?: string;
   resume_url?: string;
+  pro?: boolean;
 }
