@@ -37,25 +37,32 @@ const data = [
   },
   {
     tag: "div",
-    classNames:
-      "w-full h-fit flex flex-col gap-4 justify-center items-center px-32 bg-gray-50 py-4",
+    classNames: "w-full h-fit bg-gray-50",
     children: [
-      {
-        tag: "h2",
-        classNames: "h-fit w-full text-center text-2xl font-semibold",
-        content: "__header-2__",
-      },
       {
         tag: "div",
         classNames:
-          "w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-2",
-        children: "__list-map-2__",
+          "w-full h-fit flex flex-col gap-4 justify-center items-center py-8 max-w-[1200px] mx-auto",
+        children: [
+          {
+            tag: "h2",
+            classNames: "h-fit w-full text-center text-2xl font-semibold",
+            content: "__header-2__",
+          },
+          {
+            tag: "div",
+            classNames:
+              "w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-2",
+            children: "__list-map-2__",
+          },
+        ],
       },
     ],
   },
   {
     tag: "div",
-    classNames: "w-full h-fit grid grid-cols-1 lg:grid-cols-2 gap-4 px-32 py-4",
+    classNames:
+      "w-full h-fit grid grid-cols-1 lg:grid-cols-2 gap-4 mx-auto max-w-[1200px] px-4 py-8",
     children: [
       {
         tag: "div",
@@ -89,7 +96,8 @@ const data = [
   },
   {
     tag: "div",
-    classNames: "w-full h-fit grid grid-cols-1 lg:grid-cols-2 gap-4 px-32 py-4",
+    classNames:
+      "w-full h-fit grid grid-cols-1 lg:grid-cols-2 gap-4 mx-auto max-w-[1200px] px-4 py-8",
     children: [
       {
         tag: "div",
@@ -123,7 +131,8 @@ const data = [
   },
   {
     tag: "div",
-    classNames: "w-full h-fit grid grid-cols-1 gap-4 px-32 py-4",
+    classNames:
+      "w-full h-fit grid grid-cols-1 gap-4 mx-auto max-w-[1200px] px-4 py-8",
     children: [
       {
         tag: "div",
@@ -158,7 +167,7 @@ const data = [
   {
     tag: "div",
     classNames:
-      "w-full flex flex-col gap-4 justify-center items-center px-32 py-4",
+      "w-full flex flex-col gap-4 justify-center items-center mx-auto max-w-[1200px] px-4 py-8",
     children: [
       {
         tag: "h2",
@@ -572,7 +581,7 @@ export default function ProjectShowcasePage({
         </div>
       </section>
 
-      <div className="w-full px-4 flex flex-col gap-12 mt-8">
+      <div className="w-full flex flex-col gap-12 mt-8">
         <ProjectDataParser
           data={JSON.stringify(data)}
           replacements={JSON.stringify(replacements)}
@@ -580,31 +589,35 @@ export default function ProjectShowcasePage({
       </div>
 
       {/* Author Info */}
-      <section className="py-16 bg-muted/30">
-        <div className="w-full px-16">
-          <Card>
-            <CardContent className="p-8">
-              <div className="flex items-start space-x-6">
-                <Avatar className="h-20 w-20">
-                  <AvatarImage
-                    src={projectAuthor.avatar_url || "/placeholder.svg"}
-                    alt={projectAuthor.full_name}
-                  />
-                  <AvatarFallback className="text-lg">
-                    {projectAuthor?.full_name
-                      ? (projectAuthor.full_name.split(" ")[0]?.[0] || "") +
-                        (projectAuthor.full_name.split(" ")[1]?.[0] || "")
-                      : "User"}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="flex-1">
-                  <h3 className="text-2xl font-bold mb-2">
-                    {projectAuthor.full_name}
-                  </h3>
-                  <p className="text-lg text-muted-foreground mb-4">
-                    {projectAuthor.professional_title}
-                  </p>
-                  <p className="text-muted-foreground mb-6">
+      <section className="w-full bg-muted/30">
+        <div className="wfull max-w-[650px] mx-auto py-8">
+          <div className="w-full px-16">
+            <Card>
+              <CardContent className="p-8">
+                <div className="flex items-start space-x-6">
+                  <Avatar className="h-20 w-20">
+                    <AvatarImage
+                      src={projectAuthor.avatar_url || "/placeholder.svg"}
+                      alt={projectAuthor.full_name}
+                    />
+                    <AvatarFallback className="text-lg">
+                      {projectAuthor?.full_name
+                        ? (projectAuthor.full_name.split(" ")[0]?.[0] || "") +
+                          (projectAuthor.full_name.split(" ")[1]?.[0] || "")
+                        : "User"}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1">
+                    <h3 className="text-2xl font-bold mb-2">
+                      {projectAuthor.full_name}
+                    </h3>
+                    <p className="text-lg text-muted-foreground mb-4">
+                      {projectAuthor.professional_title}
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-4">
+                  <p className="text-muted-foreground mb-2">
                     {projectAuthor.bio}
                   </p>
                   {project.portfolio_slug && (
@@ -622,9 +635,9 @@ export default function ProjectShowcasePage({
                     </div>
                   )}
                 </div>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </section>
 
