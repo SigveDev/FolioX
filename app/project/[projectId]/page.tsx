@@ -102,7 +102,7 @@ const data = [
       {
         tag: "div",
         classNames:
-          "w-full h-full flex justify-center items-center order-first lg:order-last",
+          "w-full h-full flex justify-center items-center order-last lg:order-first",
         children: [
           {
             tag: "img",
@@ -115,7 +115,7 @@ const data = [
       {
         tag: "div",
         classNames:
-          "w-full flex flex-col gap-2 w-full h-fit order-last lg:order-first",
+          "w-full flex flex-col gap-2 w-full h-fit order-first lg:order-last",
         children: [
           {
             tag: "h2",
@@ -455,7 +455,7 @@ export default function ProjectShowcasePage({
     "__img-alt-3__": "Screenshot of the project overview section",
     "__header-4__": "Key Features",
     "__paragraph-4__":
-      "The platform includes a comprehensive set of features designed to provide a complete e-commerce experience: \n \n • User Authentication: Secure login/signup with JWT tokens • Product Catalog: Browse products with advanced search and filtering • Shopping Cart: Add/remove items with real-time price calculations • Checkout Process: Streamlined checkout with address and payment forms • Payment Processing: Secure payments powered by Stripe • Order Management: Track orders and view purchase history • Admin Dashboard: Manage products, orders, and inventory • Responsive Design: Optimized for desktop, tablet, and mobile devices",
+      "The platform includes a comprehensive set of features designed to provide a complete e-commerce experience: \n \n • User Authentication: Secure login/signup with JWT tokens \n • Product Catalog: Browse products with advanced search and filtering \n • Shopping Cart: Add/remove items with real-time price calculations \n • Checkout Process: Streamlined checkout with address and payment forms \n • Payment Processing: Secure payments powered by Stripe \n • Order Management: Track orders and view purchase history \n • Admin Dashboard: Manage products, orders, and inventory \n • Responsive Design: Optimized for desktop, tablet, and mobile devices",
     "__img-src-4__": "/placeholder.svg?height=400&width=600",
     "__img-alt-4__": "Screenshot showcasing key features",
     "__header-5__": "Technology Stack",
