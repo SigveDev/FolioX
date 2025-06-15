@@ -176,3 +176,26 @@ export const changePassword = async (
     throw error;
   }
 };
+
+export const getUserProfileById = async (userId: string) => {
+  try {
+    const userProfileDocuments = await database.listDocuments(
+      process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID || "",
+      process.env.NEXT_PUBLIC_APPWRITE_DATABASE_USER_PROFILES_COLLECTION_ID ||
+        "",
+      [Query.equal("user_id", userId)]
+    );
+
+    if (userProfileDocuments.documents.length === 0) {
+      throw new Error("User profile not found");
+    }
+
+    const userProfileDocument = userProfileDocuments
+      .documents[0] as UserProfile;
+
+    return userProfileDocument;
+  } catch (error) {
+    console.error("Error fetching user profile by ID:", error);
+    throw error;
+  }
+};
