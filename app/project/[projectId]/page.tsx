@@ -40,6 +40,7 @@ export default function ProjectShowcasePage({
       .then(async (res) => {
         const data = await res.json();
         setProject(data);
+        setLoading(false);
       })
       .catch(console.error);
   }, [projectId]);
