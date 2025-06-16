@@ -73,18 +73,81 @@ export async function getProjectByIdForView(projectId: string) {
 
   const modifiedResponse: ProjectViewDto = {
     ...response,
-    view_count: response.view_count + 1 || 0,
+    view_count: response.view_count || 0,
     layout: template ? template.data : response.custom_layout || "",
     user: userProfile,
   };
 
-  // Increment view count
-  await databaseAdmin.updateDocument(
-    process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID || "",
-    process.env.NEXT_PUBLIC_APPWRITE_DATABASE_PROJECTS_COLLECTION_ID || "",
-    response.$id,
-    { view_count: modifiedResponse.view_count }
-  );
+  if (modifiedResponse.is_published === false) {
+    throw new Error("Project is not published");
+  }
 
   return modifiedResponse as ProjectViewDto;
+}
+
+export async function addViewCountToProject(
+  projectId: string,
+  ip: string,
+  userAgent: string,
+  referrer: string
+) {
+  const { databaseAdmin } = await createAdminClient();
+
+  const checkDate = new Date();
+
+  const checkforExistingView = await databaseAdmin.listDocuments(
+    process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID || "",
+    process.env.NEXT_PUBLIC_APPWRITE_DATABASE_PROJECT_VIEWS_COLLECTION_ID || "",
+    [
+      Query.equal("project_id", projectId),
+      Query.equal("viewer_ip", ip),
+      Query.equal("viewer_user_agent", userAgent),
+      Query.equal("referrer", referrer),
+      Query.greaterThan(
+        "viewed_at",
+        new Date(checkDate.getTime() - 1000 * 60 * 5).toISOString()
+      ), // Check for views in the last 5 minutes
+    ]
+  );
+
+  // If the view already exists, return true
+  if (checkforExistingView.documents.length > 0) {
+    throw new Error(
+      "View already exists for this project from this IP and user agent in the last 5 minutes"
+    );
+  }
+
+  // Create a new view record
+  const newView = await databaseAdmin.createDocument(
+    process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID || "",
+    process.env.NEXT_PUBLIC_APPWRITE_DATABASE_PROJECT_VIEWS_COLLECTION_ID || "",
+    ID.unique(),
+    {
+      project_id: projectId,
+      viewer_ip: ip,
+      viewer_user_agent: userAgent,
+      referrer: referrer,
+      viewed_at: checkDate,
+    }
+  );
+
+  // Get the current project document
+  const projectResponse = await databaseAdmin.getDocument(
+    process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID || "",
+    process.env.NEXT_PUBLIC_APPWRITE_DATABASE_PROJECTS_COLLECTION_ID || "",
+    projectId
+  );
+
+  // Increment view count
+  const updatedProject = await databaseAdmin.updateDocument(
+    process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID || "",
+    process.env.NEXT_PUBLIC_APPWRITE_DATABASE_PROJECTS_COLLECTION_ID || "",
+    projectId,
+    { view_count: projectResponse.view_count + 1 }
+  );
+
+  if (updatedProject && newView) {
+    return true;
+  }
+  throw new Error("Failed to add view count to project");
 }
