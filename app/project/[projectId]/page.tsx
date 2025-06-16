@@ -44,6 +44,9 @@ export default function ProjectShowcasePage({
       .catch(console.error);
   }, [projectId]);
 
+  console.log(project);
+  console.log(getProjectForViewLoading);
+
   if (getProjectForViewLoading || !project) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
