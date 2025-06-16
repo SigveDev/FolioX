@@ -23,9 +23,12 @@ export default async function ProjectShowcasePage({
 }) {
   const projectId = (await params).projectId;
 
-  const response = await fetch(`/api/projects/${projectId}`, {
-    next: { revalidate: 60 }, // Revalidate every minute
-  });
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_LOCAL_REQUESTS}/api/projects/${projectId}`,
+    {
+      next: { revalidate: 60 }, // Revalidate every minute
+    }
+  );
 
   if (!response.ok) {
     throw new Error("There was an error fetching the project data.");
