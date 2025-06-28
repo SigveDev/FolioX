@@ -1,9 +1,11 @@
-import { database, Query, ID, Permission, Role } from "@/lib/appwrite";
+import { createSessionClient } from "@/lib/appwrite";
+import { ID, Permission, Query, Role } from "@/lib/appwrite/client";
 import { getCurrentUser } from "./account";
 import { UserSocialLink, UserSocialLinkDto } from "@/types/user-social-links";
 
 export const getUserSocialLinks = async () => {
   try {
+    const { database } = await createSessionClient();
     const user = await getCurrentUser();
     const socialLinks = await database.listDocuments(
       process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID || "",
@@ -28,6 +30,7 @@ export const updateUserSocialLinks = async (
   socialLinks: UserSocialLinkDto[]
 ) => {
   try {
+    const { database } = await createSessionClient();
     const user = await getCurrentUser();
 
     const existingLinksRes = await database.listDocuments(

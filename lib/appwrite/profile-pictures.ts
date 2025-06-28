@@ -1,8 +1,14 @@
-import { database, Query, storage, ID, Permission, Role } from "@/lib/appwrite";
+import { createSessionClient } from "@/lib/appwrite";
+import { ID, Permission, Query, Role } from "@/lib/appwrite/client";
 import { getCurrentUser } from "./account";
 
-export const uploadNewProfilePicture = async (fileString: string) => {
+export const uploadNewProfilePicture = async ({
+  fileString,
+}: {
+  fileString: string;
+}) => {
   try {
+    const { database, storage } = await createSessionClient();
     const user = await getCurrentUser();
     if (user) {
       const userProfileDocuments = await database.listDocuments(

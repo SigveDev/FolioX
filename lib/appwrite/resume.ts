@@ -1,8 +1,10 @@
-import { database, Query, storage, ID, Permission, Role } from "@/lib/appwrite";
+import { createSessionClient } from "@/lib/appwrite";
+import { ID, Permission, Role, Query } from "@/lib/appwrite/client";
 import { getCurrentUser } from "./account";
 
 export const uploadNewResume = async (file: File) => {
   try {
+    const { storage, database } = await createSessionClient();
     const user = await getCurrentUser();
     if (user) {
       if (!file) {
@@ -55,6 +57,7 @@ export const uploadNewResume = async (file: File) => {
 
 export const deleteMyResume = async () => {
   try {
+    const { storage, database } = await createSessionClient();
     const user = await getCurrentUser();
     if (user) {
       const userProfileDocuments = await database.listDocuments(

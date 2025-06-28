@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,13 +12,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { TabsContent } from "@/components/ui/tabs";
 import WorkInProgressOverlay from "@/components/wip-overlay";
-import { useAccount } from "@/hooks/use-account";
+import { changePassword } from "@/lib/appwrite/account";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
 const Account = () => {
-  const { updatePassword } = useAccount();
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -32,7 +33,7 @@ const Account = () => {
       return;
     }
 
-    const success = await updatePassword(currentPassword, newPassword);
+    const success = await changePassword(currentPassword, newPassword);
     if (success) {
       toast("Success", {
         description: "Password updated successfully.",

@@ -358,32 +358,34 @@ export default function HomePage() {
 
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {/* Free Plan */}
-            <Card>
+            <Card className="flex flex-col">
               <CardHeader className="text-center pb-8">
                 <CardTitle className="text-2xl">Free</CardTitle>
                 <div className="text-4xl font-bold">$0</div>
                 <CardDescription>Perfect for getting started</CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center space-x-3">
-                  <Check className="h-5 w-5 text-green-600" />
-                  <span>2 projects</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <Check className="h-5 w-5 text-green-600" />
-                  <span>Template layouts</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <Check className="h-5 w-5 text-green-600" />
-                  <span>FolioX subdomain</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <Check className="h-5 w-5 text-green-600" />
-                  <span>Mobile responsive</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <Check className="h-5 w-5 text-green-600" />
-                  <span>Basic analytics</span>
+              <CardContent className="flex flex-1 flex-col justify-between">
+                <div className="space-y-4">
+                  <div className="flex items-center space-x-3">
+                    <Check className="h-5 w-5 text-green-600" />
+                    <span>2 projects</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <Check className="h-5 w-5 text-green-600" />
+                    <span>Template layouts</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <Check className="h-5 w-5 text-green-600" />
+                    <span>FolioX subdomain</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <Check className="h-5 w-5 text-green-600" />
+                    <span>Mobile responsive</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <Check className="h-5 w-5 text-green-600" />
+                    <span>Basic analytics</span>
+                  </div>
                 </div>
                 <Button className="w-full mt-6" variant="outline" asChild>
                   <Link href="/signup">Get Started Free</Link>
@@ -392,7 +394,7 @@ export default function HomePage() {
             </Card>
 
             {/* Pro Plan */}
-            <Card className="border-blue-200 relative">
+            <Card className="border-blue-200 relative flex flex-col">
               <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
                 <Badge className="bg-gradient-to-r from-blue-600 to-purple-600">
                   Most Popular
@@ -408,30 +410,32 @@ export default function HomePage() {
                 </div>
                 <CardDescription>For serious professionals</CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center space-x-3">
-                  <Check className="h-5 w-5 text-green-600" />
-                  <span>Unlimited projects</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <Check className="h-5 w-5 text-green-600" />
-                  <span>Drag-and-drop builder</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <Check className="h-5 w-5 text-green-600" />
-                  <span>Custom domain</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <Check className="h-5 w-5 text-green-600" />
-                  <span>Advanced analytics</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <Check className="h-5 w-5 text-green-600" />
-                  <span>Priority support</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <Check className="h-5 w-5 text-green-600" />
-                  <span>Custom themes</span>
+              <CardContent className="flex-1 flex flex-col justify-between">
+                <div className="space-y-4">
+                  <div className="flex items-center space-x-3">
+                    <Check className="h-5 w-5 text-green-600" />
+                    <span>Unlimited projects</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <Check className="h-5 w-5 text-green-600" />
+                    <span>Drag-and-drop builder</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <Check className="h-5 w-5 text-green-600" />
+                    <span>Custom domain</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <Check className="h-5 w-5 text-green-600" />
+                    <span>Advanced analytics</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <Check className="h-5 w-5 text-green-600" />
+                    <span>Priority support</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <Check className="h-5 w-5 text-green-600" />
+                    <span>Custom themes</span>
+                  </div>
                 </div>
                 <Button
                   className="w-full mt-6 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"

@@ -1,59 +1,54 @@
-"use client";
-
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { useAccount } from "@/hooks/use-account";
-import { useBilling } from "@/hooks/use-billing";
+import { getCurrentUserProfile } from "@/lib/appwrite/account";
 import { Crown, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-const ProfileCard = () => {
-  const { profile } = useAccount();
-  const [profileCompletion, setProfileCompletion] = useState(0);
+const ProfileCard = async () => {
+  const profile = await getCurrentUserProfile();
 
-  useEffect(() => {
-    const calculateProfileCompletion = () => {
-      if (!profile) return 0;
+  if (!profile) {
+    return null;
+  }
 
-      let completion = 0;
-      if (profile.username) completion += 10;
-      if (profile.full_name) completion += 10;
-      if (profile.professional_title) completion += 10;
-      if (profile.bio) completion += 10;
-      if (profile.location) completion += 10;
-      if (profile.phone) completion += 10;
-      if (profile.website) completion += 10;
-      if (profile.avatar_url) completion += 10;
-      if (profile.cover_image_url) completion += 10;
-      if (profile.email) completion += 10;
+  const calculateProfileCompletion = () => {
+    let completion = 0;
+    if (profile.username) completion += 10;
+    if (profile.full_name) completion += 10;
+    if (profile.professional_title) completion += 10;
+    if (profile.bio) completion += 10;
+    if (profile.location) completion += 10;
+    if (profile.phone) completion += 10;
+    if (profile.website) completion += 10;
+    if (profile.avatar_url) completion += 10;
+    if (profile.cover_image_url) completion += 10;
+    if (profile.email) completion += 10;
+    return completion;
+  };
 
-      return completion;
-    };
-
-    setProfileCompletion(calculateProfileCompletion());
-  }, [profile]);
+  const profileCompletion = calculateProfileCompletion();
 
   return (
     <Card>
       <CardHeader className="pb-4">
         <div className="flex items-center space-x-3">
           <Avatar className="h-12 w-12">
-            <AvatarImage src={profile?.avatar_url} alt="User" />
+            <AvatarImage src={profile.avatar_url} alt="User" />
             <AvatarFallback>
-              {profile?.full_name
+              {profile.full_name
                 ? (profile.full_name.split(" ")[0]?.[0] || "") +
                   (profile.full_name.split(" ")[1]?.[0] || "")
                 : "User"}
             </AvatarFallback>
           </Avatar>
           <div>
-            <h3 className="font-semibold">{profile?.full_name || ""}</h3>
+            <h3 className="font-semibold">{profile.full_name || ""}</h3>
             <p className="text-sm text-muted-foreground">
-              {profile?.professional_title || ""}
+              {profile.professional_title || ""}
             </p>
           </div>
         </div>

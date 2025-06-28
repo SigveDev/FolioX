@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -18,7 +20,7 @@ import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import { TabsContent } from "@/components/ui/tabs";
-import { usePrivacy } from "@/hooks/use-privacy";
+import { updateUserPrivacySettings } from "@/lib/appwrite/privacy";
 import {
   UserPrivacySettingsDto,
   UserProfileVisibility,
@@ -27,8 +29,11 @@ import { Save } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-const Privacy = () => {
-  const { privacySettings, loading, updatePrivacy } = usePrivacy();
+const Privacy = ({
+  privacySettings,
+}: {
+  privacySettings: UserPrivacySettingsDto;
+}) => {
   const [editedPrivacy, setEditedPrivacy] = useState<UserPrivacySettingsDto>({
     profile_visibility: UserProfileVisibility.PUBLIC,
     show_email: false,
@@ -52,7 +57,7 @@ const Privacy = () => {
   }, [privacySettings]);
 
   const handleUpdatePrivacySettings = async () => {
-    const status = await updatePrivacy(editedPrivacy);
+    const status = await updateUserPrivacySettings(editedPrivacy);
 
     if (status) {
       toast("Success", {
@@ -77,34 +82,28 @@ const Privacy = () => {
         <CardContent className="space-y-6">
           <div className="space-y-2">
             <Label htmlFor="profileVisibility">Profile Visibility</Label>
-            {loading ? (
-              <Skeleton className="h-10 w-full" />
-            ) : (
-              <Select
-                value={editedPrivacy.profile_visibility}
-                onValueChange={(value) =>
-                  setEditedPrivacy({
-                    ...editedPrivacy,
-                    profile_visibility: value as UserProfileVisibility,
-                  })
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="public">
-                    Public - Anyone can view
-                  </SelectItem>
-                  <SelectItem value="unlisted">
-                    Unlisted - Only with direct link
-                  </SelectItem>
-                  <SelectItem value="private">
-                    Private - Only you can view
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            )}
+            <Select
+              value={editedPrivacy.profile_visibility}
+              onValueChange={(value) =>
+                setEditedPrivacy({
+                  ...editedPrivacy,
+                  profile_visibility: value as UserProfileVisibility,
+                })
+              }
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="public">Public - Anyone can view</SelectItem>
+                <SelectItem value="unlisted">
+                  Unlisted - Only with direct link
+                </SelectItem>
+                <SelectItem value="private">
+                  Private - Only you can view
+                </SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           <Separator />
@@ -116,16 +115,12 @@ const Privacy = () => {
                 Display your email on your public profile
               </p>
             </div>
-            {loading ? (
-              <Skeleton className="h-6 w-12 rounded-3xl" />
-            ) : (
-              <Switch
-                checked={editedPrivacy.show_email}
-                onCheckedChange={(checked: boolean) =>
-                  setEditedPrivacy({ ...editedPrivacy, show_email: checked })
-                }
-              />
-            )}
+            <Switch
+              checked={editedPrivacy.show_email}
+              onCheckedChange={(checked: boolean) =>
+                setEditedPrivacy({ ...editedPrivacy, show_email: checked })
+              }
+            />
           </div>
 
           <div className="flex items-center justify-between">
@@ -135,16 +130,12 @@ const Privacy = () => {
                 Display your phone number on your public profile
               </p>
             </div>
-            {loading ? (
-              <Skeleton className="h-6 w-12 rounded-3xl" />
-            ) : (
-              <Switch
-                checked={editedPrivacy.show_phone}
-                onCheckedChange={(checked: boolean) =>
-                  setEditedPrivacy({ ...editedPrivacy, show_phone: checked })
-                }
-              />
-            )}
+            <Switch
+              checked={editedPrivacy.show_phone}
+              onCheckedChange={(checked: boolean) =>
+                setEditedPrivacy({ ...editedPrivacy, show_phone: checked })
+              }
+            />
           </div>
 
           <div className="flex items-center justify-between">
@@ -154,16 +145,12 @@ const Privacy = () => {
                 Display your location on your public profile
               </p>
             </div>
-            {loading ? (
-              <Skeleton className="h-6 w-12 rounded-3xl" />
-            ) : (
-              <Switch
-                checked={editedPrivacy.show_location}
-                onCheckedChange={(checked: boolean) =>
-                  setEditedPrivacy({ ...editedPrivacy, show_location: checked })
-                }
-              />
-            )}
+            <Switch
+              checked={editedPrivacy.show_location}
+              onCheckedChange={(checked: boolean) =>
+                setEditedPrivacy({ ...editedPrivacy, show_location: checked })
+              }
+            />
           </div>
 
           <div className="flex items-center justify-between">
@@ -173,19 +160,15 @@ const Privacy = () => {
                 Help improve FolioX by sharing anonymous usage data
               </p>
             </div>
-            {loading ? (
-              <Skeleton className="h-6 w-12 rounded-3xl" />
-            ) : (
-              <Switch
-                checked={editedPrivacy.share_analytics}
-                onCheckedChange={(checked: boolean) =>
-                  setEditedPrivacy({
-                    ...editedPrivacy,
-                    share_analytics: checked,
-                  })
-                }
-              />
-            )}
+            <Switch
+              checked={editedPrivacy.share_analytics}
+              onCheckedChange={(checked: boolean) =>
+                setEditedPrivacy({
+                  ...editedPrivacy,
+                  share_analytics: checked,
+                })
+              }
+            />
           </div>
 
           <Button className="w-full" onClick={handleUpdatePrivacySettings}>

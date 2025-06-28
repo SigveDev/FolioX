@@ -1,3 +1,5 @@
+"use client";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,9 +15,8 @@ import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TabsContent } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
-import { useSocialLinks } from "@/hooks/use-sociallinks";
 import { UserProfile, UserProfileDto } from "@/types/user-profiles";
-import { UserSocialLinkDto } from "@/types/user-social-links";
+import { UserSocialLink, UserSocialLinkDto } from "@/types/user-social-links";
 import {
   Camera,
   ExternalLink,
@@ -26,14 +27,18 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import ProfilePictureUpload from "./image-cropper";
-import { useProfilePictures } from "@/hooks/use-profile-pictures";
-import { useAccount } from "@/hooks/use-account";
 import { toast } from "sonner";
+import { uploadNewProfilePicture } from "@/lib/appwrite/profile-pictures";
+import { updateUserProfile } from "@/lib/appwrite/account";
+import { updateUserSocialLinks } from "@/lib/appwrite/social";
 
-const Profile = ({ profile }: { profile: UserProfile | null }) => {
-  const { socialLinks, loading, updateSocialLinks } = useSocialLinks();
-  const { uploadProfilePicture, uploadProfileCover } = useProfilePictures();
-  const { updateProfile } = useAccount();
+const Profile = ({
+  profile,
+  socialLinks,
+}: {
+  profile: UserProfile;
+  socialLinks: UserSocialLink[];
+}) => {
   const [fullNames, setFullNames] = useState<{
     firstName: string;
     lastName: string;
@@ -90,21 +95,21 @@ const Profile = ({ profile }: { profile: UserProfile | null }) => {
 
   const handleProfileUpdate = async () => {
     if (profilePicture) {
-      uploadProfilePicture({ fileString: profilePicture });
+      uploadNewProfilePicture({ fileString: profilePicture });
     }
 
     if (coverImage) {
-      uploadProfileCover({ fileString: coverImage });
+      uploadNewProfilePicture({ fileString: coverImage });
     }
 
     const fullName = `${fullNames.firstName} ${fullNames.lastName}`.trim();
 
-    const updateStatus = await updateProfile({
+    const updateStatus = await updateUserProfile({
       ...editedProfile,
       full_name: fullName,
     } as UserProfileDto);
 
-    const socialLinksStatus = await updateSocialLinks(socialLinksState);
+    const socialLinksStatus = await updateUserSocialLinks(socialLinksState);
 
     if (updateStatus && socialLinksStatus) {
       toast("Success", {
@@ -404,80 +409,64 @@ const Profile = ({ profile }: { profile: UserProfile | null }) => {
             <div className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="twitter">Twitter</Label>
-                {loading ? (
-                  <Skeleton className="h-10 w-full" />
-                ) : (
-                  <Input
-                    id="twitter"
-                    placeholder="twitter.com/username"
-                    disabled={loading}
-                    value={
-                      socialLinksState.find(
-                        (link) => link.platform === "twitter"
-                      )?.url || ""
-                    }
-                    onChange={(e) =>
-                      setSocialLinksState((prev) =>
-                        prev.map((link) =>
-                          link.platform === "twitter"
-                            ? { ...link, url: e.target.value }
-                            : link
-                        )
+                <Input
+                  id="twitter"
+                  placeholder="twitter.com/username"
+                  value={
+                    socialLinksState.find((link) => link.platform === "twitter")
+                      ?.url || ""
+                  }
+                  onChange={(e) =>
+                    setSocialLinksState((prev) =>
+                      prev.map((link) =>
+                        link.platform === "twitter"
+                          ? { ...link, url: e.target.value }
+                          : link
                       )
-                    }
-                  />
-                )}
+                    )
+                  }
+                />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="linkedin">LinkedIn</Label>
-                {loading ? (
-                  <Skeleton className="h-10 w-full" />
-                ) : (
-                  <Input
-                    id="linkedin"
-                    placeholder="linkedin.com/in/username"
-                    disabled={loading}
-                    value={
-                      socialLinksState.find(
-                        (link) => link.platform === "linkedin"
-                      )?.url || ""
-                    }
-                    onChange={(e) =>
-                      setSocialLinksState((prev) =>
-                        prev.map((link) =>
-                          link.platform === "linkedin"
-                            ? { ...link, url: e.target.value }
-                            : link
-                        )
+                <Input
+                  id="linkedin"
+                  placeholder="linkedin.com/in/username"
+                  value={
+                    socialLinksState.find(
+                      (link) => link.platform === "linkedin"
+                    )?.url || ""
+                  }
+                  onChange={(e) =>
+                    setSocialLinksState((prev) =>
+                      prev.map((link) =>
+                        link.platform === "linkedin"
+                          ? { ...link, url: e.target.value }
+                          : link
                       )
-                    }
-                  />
-                )}
+                    )
+                  }
+                />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="github">GitHub</Label>
-                {loading ? (
-                  <Skeleton className="h-10 w-full" />
-                ) : (
-                  <Input
-                    id="github"
-                    placeholder="github.com/username"
-                    value={
-                      socialLinksState.find(
-                        (link) => link.platform === "github"
-                      )?.url || ""
-                    }
-                    onChange={(e) =>
-                      setSocialLinksState((prev) =>
-                        prev.map((link) =>
-                          link.platform === "github"
-                            ? { ...link, url: e.target.value }
-                            : link
-                        )
+                <Input
+                  id="github"
+                  placeholder="github.com/username"
+                  value={
+                    socialLinksState.find((link) => link.platform === "github")
+                      ?.url || ""
+                  }
+                  onChange={(e) =>
+                    setSocialLinksState((prev) =>
+                      prev.map((link) =>
+                        link.platform === "github"
+                          ? { ...link, url: e.target.value }
+                          : link
                       )
-                    }
-                  />
-                )}
+                    )
+                  }
+                />
               </div>
             </div>
           </div>

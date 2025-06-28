@@ -1,4 +1,5 @@
-import { database, Query, ID, Permission, Role } from "@/lib/appwrite";
+import { createSessionClient } from "@/lib/appwrite";
+import { ID, Permission, Query, Role } from "@/lib/appwrite/client";
 import { getCurrentUser } from "./account";
 import {
   UserPrivacySettings,
@@ -7,6 +8,7 @@ import {
 
 export const getUserPrivacySettings = async () => {
   try {
+    const { database } = await createSessionClient();
     const user = await getCurrentUser();
     if (!user) {
       throw new Error("User not authenticated");
@@ -21,7 +23,7 @@ export const getUserPrivacySettings = async () => {
     );
 
     if (privacySettingsDocuments.documents.length === 0) {
-      const newPrivacySettings = database.createDocument(
+      const newPrivacySettings = await database.createDocument(
         process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID || "",
         process.env
           .NEXT_PUBLIC_APPWRITE_DATABASE_USER_PRIVACY_SETTINGS_COLLECTION_ID ||
@@ -40,7 +42,7 @@ export const getUserPrivacySettings = async () => {
       console.warn(
         "No privacy settings found for the user, creating new document."
       );
-      return newPrivacySettings;
+      return newPrivacySettings as UserPrivacySettings;
     }
     const privacySettingsDocument = privacySettingsDocuments
       .documents[0] as UserPrivacySettings;
@@ -55,6 +57,7 @@ export const updateUserPrivacySettings = async (
   privacySettings: UserPrivacySettingsDto
 ) => {
   try {
+    const { database } = await createSessionClient();
     const user = await getCurrentUser();
     if (!user) {
       throw new Error("User not authenticated");

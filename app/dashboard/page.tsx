@@ -1,8 +1,4 @@
-"use client";
-
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { useAccount } from "@/hooks/use-account";
+import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Plus, BarChart3, Crown } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -14,34 +10,21 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import DashboardHeader from "@/app/dashboard/header";
-import LoadingSpinner from "@/components/loading";
-import ErrorPage from "@/components/login-error";
 import ProfileCard from "./profile-card";
 import QuickStats from "./quick-stats";
-import { useProjects } from "@/hooks/use-projects";
 import ProjectCards from "./project-cards";
+import { getCurrentUserProfile, getLoggedInUser } from "@/lib/appwrite/account";
+import { getMyProjects } from "@/lib/appwrite/projects";
 
-export default function DashboardPage() {
-  const router = useRouter();
-  const { profile, user, loading: userLoading } = useAccount();
-  const {
-    projects,
-    loading: projectsLoading,
-    error: projectsError,
-  } = useProjects();
+export default async function DashboardPage() {
+  const user = await getLoggedInUser();
 
-  useEffect(() => {
-    if (!userLoading && !user) {
-      router.push("/login");
-    }
-  }, [userLoading, user, router]);
-
-  if (userLoading) {
-    return <LoadingSpinner />;
-  }
   if (!user) {
-    return <ErrorPage />;
+    redirect("/login");
   }
+
+  const profile = await getCurrentUserProfile();
+  const projects = await getMyProjects();
 
   return (
     <div className="min-h-screen bg-background">
@@ -70,7 +53,6 @@ export default function DashboardPage() {
                     : 0
                 }
                 pro={profile?.pro || false}
-                loading={projectsLoading}
               />
 
               {/* Upgrade CTA */}
@@ -133,10 +115,7 @@ export default function DashboardPage() {
 
                 <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
                   {/* Project Cards */}
-                  <ProjectCards
-                    projects={projects || []}
-                    loading={projectsLoading}
-                  />
+                  <ProjectCards projects={projects || []} />
 
                   {/* Add New Project Card */}
                   {projects && projects.length < 2 && (

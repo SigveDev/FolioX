@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import {
   DropdownMenu,
@@ -14,35 +12,16 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "../../components/ui/avatar";
-import { useAccount } from "@/hooks/use-account";
+import { getCurrentUserProfile, logout } from "@/lib/appwrite/account";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import DropdownMenuHeader from "./dropdown-menu-header";
 
-export default function DashboardHeader() {
-  const router = useRouter();
-  const { profile, logout, hardRefresh } = useAccount();
+export default async function DashboardHeader() {
+  const profile = await getCurrentUserProfile();
 
-  const handleSignOut = async () => {
-    try {
-      const response = await logout();
-      if (response) {
-        hardRefresh();
-        router.push("/");
-      } else {
-        toast("Error", {
-          description:
-            "There was an error signing out. Please try again later.",
-          duration: 3000,
-        });
-      }
-    } catch (error) {
-      console.error("Sign out error:", error);
-      toast("Error", {
-        description: "There was an error signing out. Please try again later.",
-        duration: 3000,
-      });
-    }
-  };
+  if (!profile) {
+    return null;
+  }
 
   return (
     <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -54,46 +33,7 @@ export default function DashboardHeader() {
           <span className="font-bold text-xl">FolioX</span>
         </Link>
         <div className="flex items-center space-x-4">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                className="relative h-10 w-10 rounded-full"
-              >
-                <Avatar className="h-10 w-10">
-                  <AvatarImage src={profile?.avatar_url} alt="User" />
-                  <AvatarFallback>
-                    {profile?.full_name
-                      ? (profile.full_name.split(" ")[0]?.[0] || "") +
-                        (profile.full_name.split(" ")[1]?.[0] || "")
-                      : "User"}
-                  </AvatarFallback>
-                </Avatar>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56" align="end" forceMount>
-              <DropdownMenuItem asChild>
-                <Link href="/settings" className="cursor-pointer">
-                  <Settings className="mr-2 h-4 w-4" />
-                  Settings
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href="/billing" className="cursor-pointer">
-                  <CreditCard className="mr-2 h-4 w-4" />
-                  Billing
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <button
-                  className="w-full text-left cursor-pointer"
-                  onClick={handleSignOut}
-                >
-                  Sign out
-                </button>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <DropdownMenuHeader profile={profile} />
         </div>
       </div>
     </header>

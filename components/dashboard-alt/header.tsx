@@ -3,7 +3,7 @@ import { Button } from "../ui/button";
 import { ArrowLeft } from "lucide-react";
 import { Separator } from "../ui/separator";
 
-const DashboardAltHeader = () => {
+const DashboardAltHeader = ({ children }: { children?: React.ReactNode }) => {
   return (
     <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="flex h-16 items-center justify-between w-full px-4">
@@ -22,6 +22,7 @@ const DashboardAltHeader = () => {
             <span className="font-bold">FolioX</span>
           </div>
         </div>
+        <div>{children}</div>
       </div>
     </header>
   );

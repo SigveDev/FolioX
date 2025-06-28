@@ -13,14 +13,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useResume } from "@/hooks/use-resume";
 import { toast } from "sonner";
 import { UserProfile } from "@/types/user-profiles";
-import { useAccount } from "@/hooks/use-account";
+import { deleteMyResume, uploadNewResume } from "@/lib/appwrite/resume";
 
 const Resume = ({ profile }: { profile: UserProfile | null }) => {
-  const { refetch } = useAccount();
-  const { uploadResume, deleteResume } = useResume();
   const [edited, setEdited] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
@@ -46,7 +43,7 @@ const Resume = ({ profile }: { profile: UserProfile | null }) => {
 
   const handleResumeEdit = async () => {
     if (selectedFile) {
-      const result = await uploadResume(selectedFile);
+      const result = await uploadNewResume(selectedFile);
       if (result) {
         setEdited(false);
         setSelectedFile(null);
@@ -62,7 +59,7 @@ const Resume = ({ profile }: { profile: UserProfile | null }) => {
         });
       }
     } else {
-      const result = await deleteResume();
+      const result = await deleteMyResume();
       if (result) {
         setEdited(false);
         setSelectedFile(null);
@@ -78,7 +75,6 @@ const Resume = ({ profile }: { profile: UserProfile | null }) => {
         });
       }
     }
-    await refetch();
   };
 
   const removeResume = async () => {

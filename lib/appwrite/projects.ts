@@ -1,30 +1,30 @@
-import {
-  database,
-  Query,
-  ID,
-  Permission,
-  Role,
-  createAdminClient,
-} from "@/lib/appwrite";
+import { createAdminClient, createSessionClient } from "@/lib/appwrite";
+import { ID, Query } from "@/lib/appwrite/client";
 import { getCurrentUser, getUserProfileById } from "./account";
 import { Project, ProjectViewDto } from "@/types/project";
 import { getTemplateById } from "./templates";
 
 export async function getMyProjects() {
-  const user = await getCurrentUser();
-  if (!user) return [];
+  try {
+    const user = await getCurrentUser();
+    if (!user) return [];
 
-  const response = await database.listDocuments(
-    process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID || "",
-    process.env.NEXT_PUBLIC_APPWRITE_DATABASE_PROJECTS_COLLECTION_ID || "",
-    [Query.equal("user_id", user.$id)]
-  );
-  return response.documents as Project[];
+    const { database } = await createSessionClient();
+    const response = await database.listDocuments(
+      process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID || "",
+      process.env.NEXT_PUBLIC_APPWRITE_DATABASE_PROJECTS_COLLECTION_ID || "",
+      [Query.equal("user_id", user.$id)]
+    );
+    return response.documents as Project[];
+  } catch (error) {
+    console.error("Error fetching my projects:", error);
+    throw error;
+  }
 }
 
 export async function getProjectByIdForView(projectId: string) {
   const { databaseAdmin } = await createAdminClient();
-  const response = (await database.getDocument(
+  const response = (await databaseAdmin.getDocument(
     process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID || "",
     process.env.NEXT_PUBLIC_APPWRITE_DATABASE_PROJECTS_COLLECTION_ID || "",
     projectId

@@ -1,14 +1,7 @@
 import React from "react";
 import TrackProjectView from "@/components/track-project-view";
 import Link from "next/link";
-import {
-  ExternalLink,
-  Github,
-  Heart,
-  Share2,
-  Eye,
-  Loader2,
-} from "lucide-react";
+import { ExternalLink, Github, Heart, Share2, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -26,7 +19,7 @@ export default async function ProjectShowcasePage({
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_LOCAL_REQUESTS}/api/projects/${projectId}`,
     {
-      next: { revalidate: 60 }, // Revalidate every minute
+      next: { revalidate: 3000 }, // Revalidate every 5 minutes
     }
   );
 

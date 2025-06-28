@@ -1,4 +1,8 @@
-import { account, database, ID, Permission, Role, Query } from "@/lib/appwrite";
+"use server";
+
+import { cookies } from "next/headers";
+import { createAdminClient, createSessionClient } from "@/lib/appwrite";
+import { ID, Permission, Role, Query } from "@/lib/appwrite/client";
 import { UserProfile, UserProfileDto } from "@/types/user-profiles";
 
 export const createNewUser_Email = async (
@@ -9,11 +13,31 @@ export const createNewUser_Email = async (
   password: string
 ) => {
   try {
-    const user = await account.create(ID.unique(), email, password, username);
+    const { accountAdmin, databaseAdmin } = await createAdminClient();
+
+    const user = await accountAdmin.create(
+      ID.unique(),
+      email,
+      password,
+      username
+    );
     if (user) {
-      const login = await account.createEmailPasswordSession(email, password);
+      const login = await accountAdmin.createEmailPasswordSession(
+        email,
+        password
+      );
+      (await cookies()).set(
+        process.env.NEXT_PUBLIC_APPWRITE_COOKIE_KEY || "appwrite_session",
+        login.secret,
+        {
+          path: "/",
+          httpOnly: true,
+          sameSite: "strict",
+          secure: true,
+        }
+      );
       if (login) {
-        const userProfileDocument = await database.createDocument(
+        const userProfileDocument = await databaseAdmin.createDocument(
           process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID || "",
           process.env
             .NEXT_PUBLIC_APPWRITE_DATABASE_USER_PROFILES_COLLECTION_ID || "",
@@ -53,6 +77,7 @@ export const createNewUser_Email = async (
 
 export const getCurrentUser = async () => {
   try {
+    const { account } = await createSessionClient();
     const user = await account.get();
     return user;
   } catch (error) {
@@ -60,8 +85,19 @@ export const getCurrentUser = async () => {
   }
 };
 
+export async function getLoggedInUser() {
+  try {
+    const { account } = await createSessionClient();
+    return await account.get();
+  } catch (error) {
+    return null;
+  }
+}
+
 export const getCurrentUserProfile = async () => {
   try {
+    const { database } = await createSessionClient();
+
     const user = await getCurrentUser();
     if (!user) {
       throw new Error("User not authenticated");
@@ -90,7 +126,22 @@ export const getCurrentUserProfile = async () => {
 
 export const loginWithEmail = async (email: string, password: string) => {
   try {
-    const response = await account.createEmailPasswordSession(email, password);
+    const { accountAdmin } = await createAdminClient();
+    const response = await accountAdmin.createEmailPasswordSession(
+      email,
+      password
+    );
+    console.log("Login successful:", response);
+    (await cookies()).set(
+      process.env.NEXT_PUBLIC_APPWRITE_COOKIE_KEY || "appwrite_session",
+      response.secret,
+      {
+        path: "/",
+        httpOnly: true,
+        sameSite: "strict",
+        secure: true,
+      }
+    );
     return response;
   } catch (error) {
     console.error("Error logging in with email:", error);
@@ -100,6 +151,7 @@ export const loginWithEmail = async (email: string, password: string) => {
 
 export const logout = async () => {
   try {
+    const { account } = await createSessionClient();
     await account.deleteSession("current");
     return true;
   } catch (error) {
@@ -110,6 +162,7 @@ export const logout = async () => {
 
 export const updateUserProfile = async (changedUserProfile: UserProfileDto) => {
   try {
+    const { database } = await createSessionClient();
     const user = await getCurrentUser();
     if (!user) {
       throw new Error("User not authenticated");
@@ -164,6 +217,7 @@ export const changePassword = async (
   newPassword: string
 ) => {
   try {
+    const { account } = await createSessionClient();
     const user = await getCurrentUser();
     if (!user) {
       throw new Error("User not authenticated");
@@ -179,6 +233,7 @@ export const changePassword = async (
 
 export const getUserProfileById = async (userId: string) => {
   try {
+    const { database } = await createSessionClient();
     const userProfileDocuments = await database.listDocuments(
       process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID || "",
       process.env.NEXT_PUBLIC_APPWRITE_DATABASE_USER_PROFILES_COLLECTION_ID ||

@@ -1,33 +1,23 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import { User, Bell, Shield, Globe, FileUser } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import DashboardAltHeader from "@/components/dashboard-alt/header";
-import LoadingSpinner from "@/components/loading";
 import ErrorPage from "@/components/login-error";
-import { useAccount } from "@/hooks/use-account";
-import { useRouter } from "next/navigation";
 import Profile from "./profile";
 import Notifications from "./notifications";
 import Privacy from "./privacy";
 import Account from "./account";
 import Resume from "./resume";
+import { getCurrentUserProfile, getLoggedInUser } from "@/lib/appwrite/account";
+import { getUserPrivacySettings } from "@/lib/appwrite/privacy";
+import { getUserSocialLinks } from "@/lib/appwrite/social";
 
-export default function SettingsPage() {
-  const router = useRouter();
-  const { user, loading, profile } = useAccount();
+export default async function SettingsPage() {
+  const user = await getLoggedInUser();
+  const profile = await getCurrentUserProfile();
+  const privacySettings = await getUserPrivacySettings();
+  const socialLinks = await getUserSocialLinks();
 
-  useEffect(() => {
-    if (!loading && !user) {
-      router.push("/login");
-    }
-  }, [loading, user, router]);
-
-  if (loading) {
-    return <LoadingSpinner />;
-  }
-  if (!user) {
+  if (!user || !profile) {
     return <ErrorPage />;
   }
 
@@ -86,13 +76,13 @@ export default function SettingsPage() {
             </TabsList>
 
             {/* Profile Tab */}
-            <Profile profile={profile} />
+            <Profile profile={profile} socialLinks={socialLinks} />
 
             {/* Notifications Tab */}
             <Notifications />
 
             {/* Privacy Tab */}
-            <Privacy />
+            <Privacy privacySettings={privacySettings} />
 
             {/* Account Tab */}
             <Account />

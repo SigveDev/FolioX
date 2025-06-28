@@ -1,15 +1,15 @@
-"use client";
+"use server";
 
 import Link from "next/link";
 import { Button } from "../ui/button";
-import { useAccount } from "@/hooks/use-account";
+import { getLoggedInUser } from "@/lib/appwrite/account";
 
-export default function LandingPageHeader({
+export default async function LandingPageHeader({
   activeSection = "home",
 }: {
   activeSection?: "home" | "features" | "pricing" | "examples";
 }) {
-  const { user } = useAccount();
+  const user = await getLoggedInUser();
   return (
     <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 flex justify-center">
       <div className="flex h-16 items-center justify-between w-full px-8">

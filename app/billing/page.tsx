@@ -1,16 +1,30 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Link from "next/link"
-import { ArrowLeft, CreditCard, Download, Calendar, Crown, AlertCircle, Check } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
-import { Alert, AlertDescription } from "@/components/ui/alert"
+import { useState } from "react";
+import Link from "next/link";
+import {
+  ArrowLeft,
+  CreditCard,
+  Download,
+  Calendar,
+  Crown,
+  AlertCircle,
+  Check,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 export default function BillingPage() {
-  const [currentPlan] = useState("free") // or "pro"
+  const [currentPlan] = useState("free"); // or "pro"
 
   const billingHistory = [
     {
@@ -37,7 +51,7 @@ export default function BillingPage() {
       status: "paid",
       invoice: "INV-003",
     },
-  ]
+  ];
 
   return (
     <div className="min-h-screen bg-background">
@@ -67,7 +81,9 @@ export default function BillingPage() {
           {/* Header */}
           <div>
             <h1 className="text-3xl font-bold">Billing & Subscription</h1>
-            <p className="text-muted-foreground mt-2">Manage your subscription and billing information</p>
+            <p className="text-muted-foreground mt-2">
+              Manage your subscription and billing information
+            </p>
           </div>
 
           {/* Current Plan */}
@@ -75,7 +91,10 @@ export default function BillingPage() {
             <CardHeader>
               <CardTitle className="flex items-center justify-between">
                 Current Plan
-                <Badge variant={currentPlan === "pro" ? "default" : "secondary"} className="ml-2">
+                <Badge
+                  variant={currentPlan === "pro" ? "default" : "secondary"}
+                  className="ml-2"
+                >
                   {currentPlan === "pro" ? (
                     <>
                       <Crown className="mr-1 h-3 w-3" />
@@ -105,7 +124,9 @@ export default function BillingPage() {
                   </div>
                   <div className="flex items-center justify-between">
                     <span>Features</span>
-                    <span className="font-medium">Template layouts, Basic analytics</span>
+                    <span className="font-medium">
+                      Template layouts, Basic analytics
+                    </span>
                   </div>
                   <Separator />
                   <div className="space-y-4">
@@ -128,7 +149,10 @@ export default function BillingPage() {
                         <span>Advanced analytics</span>
                       </div>
                     </div>
-                    <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600" asChild>
+                    <Button
+                      className="w-full bg-gradient-to-r from-blue-600 to-purple-600"
+                      asChild
+                    >
                       <Link href="/pricing">Upgrade to Pro - $15/month</Link>
                     </Button>
                   </div>
@@ -160,7 +184,10 @@ export default function BillingPage() {
                       Switch to Yearly (Save 20%)
                     </Button>
                   </div>
-                  <Button variant="outline" className="w-full text-red-600 hover:text-red-700">
+                  <Button
+                    variant="outline"
+                    className="w-full text-red-600 hover:text-red-700"
+                  >
                     Cancel Subscription
                   </Button>
                 </div>
@@ -173,7 +200,9 @@ export default function BillingPage() {
             <Card>
               <CardHeader>
                 <CardTitle>Payment Method</CardTitle>
-                <CardDescription>Manage your payment information</CardDescription>
+                <CardDescription>
+                  Manage your payment information
+                </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center space-x-4 p-4 border rounded-lg">
@@ -182,7 +211,9 @@ export default function BillingPage() {
                   </div>
                   <div className="flex-1">
                     <p className="font-medium">Visa ending in 4242</p>
-                    <p className="text-sm text-muted-foreground">Expires 12/2027</p>
+                    <p className="text-sm text-muted-foreground">
+                      Expires 12/2027
+                    </p>
                   </div>
                   <Badge variant="secondary">Default</Badge>
                 </div>
@@ -199,19 +230,26 @@ export default function BillingPage() {
             <Card>
               <CardHeader>
                 <CardTitle>Billing History</CardTitle>
-                <CardDescription>Download invoices and view payment history</CardDescription>
+                <CardDescription>
+                  Download invoices and view payment history
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   {billingHistory.map((item) => (
-                    <div key={item.id} className="flex items-center justify-between p-4 border rounded-lg">
+                    <div
+                      key={item.id}
+                      className="flex items-center justify-between p-4 border rounded-lg"
+                    >
                       <div className="flex items-center space-x-4">
                         <div className="h-10 w-10 rounded bg-green-100 flex items-center justify-center">
                           <Calendar className="h-5 w-5 text-green-600" />
                         </div>
                         <div>
                           <p className="font-medium">{item.description}</p>
-                          <p className="text-sm text-muted-foreground">{item.date}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {item.date}
+                          </p>
                         </div>
                       </div>
                       <div className="flex items-center space-x-4">
@@ -242,21 +280,28 @@ export default function BillingPage() {
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
                 <span>Projects</span>
-                <span className="font-medium">{currentPlan === "pro" ? "5 / Unlimited" : "2 / 2"}</span>
+                <span className="font-medium">
+                  {currentPlan === "pro" ? "5 / Unlimited" : "2 / 2"}
+                </span>
               </div>
               <div className="flex items-center justify-between">
                 <span>Storage</span>
-                <span className="font-medium">2.1 GB / {currentPlan === "pro" ? "100 GB" : "1 GB"}</span>
+                <span className="font-medium">
+                  2.1 GB / {currentPlan === "pro" ? "100 GB" : "1 GB"}
+                </span>
               </div>
               <div className="flex items-center justify-between">
                 <span>Bandwidth</span>
-                <span className="font-medium">45 GB / {currentPlan === "pro" ? "Unlimited" : "10 GB"}</span>
+                <span className="font-medium">
+                  45 GB / {currentPlan === "pro" ? "Unlimited" : "10 GB"}
+                </span>
               </div>
               {currentPlan === "free" && (
                 <Alert>
                   <AlertCircle className="h-4 w-4" />
                   <AlertDescription>
-                    You're approaching your storage limit. Consider upgrading to Pro for unlimited storage.
+                    You're approaching your storage limit. Consider upgrading to
+                    Pro for unlimited storage.
                   </AlertDescription>
                 </Alert>
               )}
@@ -267,12 +312,14 @@ export default function BillingPage() {
           <Card>
             <CardHeader>
               <CardTitle>Need Help?</CardTitle>
-              <CardDescription>Get support with billing questions</CardDescription>
+              <CardDescription>
+                Get support with billing questions
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-muted-foreground">
-                If you have any questions about your billing or need help with your subscription, our support team is
-                here to help.
+                If you have any questions about your billing or need help with
+                your subscription, our support team is here to help.
               </p>
               <div className="flex space-x-2">
                 <Button variant="outline" className="flex-1">
@@ -287,5 +334,5 @@ export default function BillingPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }
