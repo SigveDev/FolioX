@@ -2,7 +2,6 @@
 
 import dynamic from "next/dynamic";
 import { Loader2 } from "lucide-react";
-import { useMemo } from "react";
 
 type Props = {
   iconName: string;
@@ -10,23 +9,31 @@ type Props = {
   color?: string;
 };
 
+// fallback loader
+const FallbackIcon = ({ size, color }: { size: number; color: string }) => (
+  <Loader2 size={size} color={color} className="animate-spin" />
+);
+
 export default function LucideIconFromString({
   iconName,
   size = 24,
   color = "currentColor",
 }: Props) {
-  const IconComponent = useMemo(() => {
-    try {
-      return dynamic(() =>
-        import("lucide-react").then((mod) => {
-          const Icon = (mod as any)[iconName];
-          return Icon || Loader2;
-        })
-      );
-    } catch {
-      return Loader2;
+  const DynamicIcon = dynamic(
+    async () => {
+      const mod = await import("lucide-react");
+      const Icon = (mod as any)[iconName];
+      return Icon || Loader2;
+    },
+    {
+      loading: () => <FallbackIcon size={size} color={color} />,
+      ssr: false,
     }
-  }, [iconName]);
+  );
 
+  const IconComponent = DynamicIcon as React.ComponentType<{
+    size?: number;
+    color?: string;
+  }>;
   return <IconComponent size={size} color={color} />;
 }

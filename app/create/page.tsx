@@ -10,19 +10,19 @@ import {
 import { Badge } from "@/components/ui/badge";
 import DashboardAltHeader from "@/components/dashboard-alt/header";
 import { getCurrentUserProfile, getLoggedInUser } from "@/lib/appwrite/account";
-import ErrorPage from "@/components/error";
 import { getTemplateTypes } from "@/lib/appwrite/template-types";
 import { Template_Types } from "@/types/template-types";
 import LucideIconFromString from "@/components/lucide-icon-from-string";
+import { redirect } from "next/navigation";
 
 export default async function CreatePage() {
   const user = await getLoggedInUser();
-  const profile = await getCurrentUserProfile();
 
-  if (!user || !profile) {
-    return <ErrorPage />;
+  if (!user) {
+    redirect("/login");
   }
 
+  const profile = await getCurrentUserProfile();
   const templateTypes = await getTemplateTypes();
 
   return (
