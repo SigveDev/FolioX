@@ -11,8 +11,8 @@ interface ErrorPageProps {
 }
 
 export default function ErrorPage({
-  title = "Authentication Error",
-  message = "We couldn't verify your login status. Please try again.",
+  title = "There was an error",
+  message = "There was an error loading the page. Please try again later. If the problem persists, contact support.",
   actionText = "Try Again",
   onAction = () => window.location.reload(),
 }: ErrorPageProps) {

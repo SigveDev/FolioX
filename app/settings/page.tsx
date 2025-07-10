@@ -1,7 +1,7 @@
 import { User, Bell, Shield, Globe, FileUser } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import DashboardAltHeader from "@/components/dashboard-alt/header";
-import ErrorPage from "@/components/login-error";
+import ErrorPage from "@/components/error";
 import Profile from "./profile";
 import Notifications from "./notifications";
 import Privacy from "./privacy";
